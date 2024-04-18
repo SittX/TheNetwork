@@ -2,8 +2,6 @@ package com.KST.TheNetwork.service;
 
 import com.KST.TheNetwork.model.Email;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -17,7 +15,7 @@ public class MailService {
     private final MailContentBuilder mailContentBuilder;
 
     @Async
-    public void sendEmail(Email email){
+    public void sendEmail(Email email) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom("testing@private.com");
@@ -29,5 +27,6 @@ public class MailService {
 
         mailSender.send(messagePreparator);
         System.out.println("Message has been sent to the user");
-    };
+    }
+
 }

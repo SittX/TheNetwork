@@ -11,6 +11,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "tbl_verification_token")
 public class VerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

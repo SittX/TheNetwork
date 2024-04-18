@@ -1,6 +1,7 @@
 package com.KST.TheNetwork.model.type;
 
 public enum ImageSubType {
-    PROFILE_FRONT,
-    PROFILE_BACK
+    PROFILE_PORTRAIT,
+    PROFILE_BACKGROUND,
+    POST_IMAGE,
 }

@@ -1,5 +1,6 @@
 package com.KST.TheNetwork.model;
 
+import com.KST.TheNetwork.model.type.VoteType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,16 +8,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "tbl_vote")
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,10 @@ public class Vote {
 
     private Long downVote;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private VoteType votetype;
+
     @CreationTimestamp
     private Timestamp createdOn;
 
@@ -34,10 +38,10 @@ public class Vote {
     private Timestamp updatedOn;
 
     @OneToOne
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @OneToOne
-    @JoinColumn(name = "commentId")
+    @JoinColumn(name = "comment_id")
     private Comment Comment;
 }

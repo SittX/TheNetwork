@@ -1,7 +1,6 @@
 package com.KST.TheNetwork.model;
 
 import lombok.*;
-import org.springframework.stereotype.Service;
 
 @Getter
 @Setter

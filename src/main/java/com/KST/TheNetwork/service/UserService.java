@@ -12,13 +12,13 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User save(User user){
-        if(user == null) throw new RuntimeException("User cannot be null");
+    public User save(User user) {
+        if (user == null) throw new RuntimeException("User cannot be null");
 
         return userRepository.save(user);
     }
 
-    public Optional<User> findByUsername(String username){
+    public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 }

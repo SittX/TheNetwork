@@ -1,10 +1,14 @@
 package com.KST.TheNetwork.service;
 
-import com.KST.TheNetwork.model.*;
+import com.KST.TheNetwork.model.Email;
+import com.KST.TheNetwork.model.Role;
+import com.KST.TheNetwork.model.User;
+import com.KST.TheNetwork.model.VerificationToken;
+import com.KST.TheNetwork.model.dto.UserDTO;
 import com.KST.TheNetwork.model.request.LoginRequest;
 import com.KST.TheNetwork.model.request.RegistrationRequest;
+import com.KST.TheNetwork.model.response.RegistrationResponse;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,7 +35,7 @@ public class AuthService {
     private String MAIL_VERIFY_URL;
 
     @Transactional
-    public String signUp(RegistrationRequest registrationRequest){
+    public RegistrationResponse signUp(RegistrationRequest registrationRequest) {
         User user = User.builder()
                 .username(registrationRequest.getUsername())
                 .password(passwordEncoder.encode(registrationRequest.getPassword()))
@@ -50,20 +54,29 @@ public class AuthService {
         verificationEmail.setBody(this.MAIL_VERIFY_URL + token.getToken());
         mailService.sendEmail(verificationEmail);
 
-        return jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
+        return new RegistrationResponse(jwtToken, mapToDTO(user));
     }
 
-    private VerificationToken setUserVerificationToken(User user){
+    private UserDTO mapToDTO(User user){
+        return UserDTO.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
+    }
+
+    private VerificationToken setUserVerificationToken(User user) {
         UUID uuid = UUID.randomUUID();
         VerificationToken token = new VerificationToken();
         token.setUser(user);
         token.setToken(uuid.toString());
-        token.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(2)));
+        token.setExpiryDate(Date.valueOf(LocalDate.now().plusDays(1)));
         return this.verificationTokenService.save(token);
     }
 
-    public Authentication login(LoginRequest loginRequest){
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword());
+    public Authentication login(LoginRequest loginRequest) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
         return authenticationManager.authenticate(authToken);
     }
 }

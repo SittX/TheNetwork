@@ -28,8 +28,8 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String extractUsername(String token){
-        return extractClaim(token,Claims::getSubject);
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
     }
 
     private boolean isTokenExpired(String token) {
@@ -40,22 +40,22 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public boolean isValidToken(String token, UserDetails userDetails){
+    public boolean isValidToken(String token, UserDetails userDetails) {
         String username = userDetails.getUsername();
         return (!isTokenExpired(token) && username.equals(extractUsername(token)));
     }
 
-    public Claims extractClaims(String token){
-       JwtParser parser = Jwts.parserBuilder()
+    public Claims extractClaims(String token) {
+        JwtParser parser = Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build();
 
-       return parser.parseClaimsJws(token).getBody();
+        return parser.parseClaimsJws(token).getBody();
     }
 
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
-                .signWith(getSigningKey(),SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .setClaims(new HashMap<>())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -63,7 +63,7 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateToken(Map<String,Object> claims, UserDetails userDetails){
+    public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts.builder()
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .setClaims(claims)
@@ -73,7 +73,7 @@ public class JwtService {
                 .compact();
     }
 
-    public Key getSigningKey(){
+    public Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
